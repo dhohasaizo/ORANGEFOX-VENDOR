@@ -33,7 +33,7 @@ RW_WORK=$OUT/RW_AIK
 RW_RAMDISK="$RW_WORK/ramdisk"
 RW_DEVICE=$(cut -d'_' -f2 <<<$TARGET_PRODUCT)
 RW_OUT_NAME=OrangeFox-$RW_BUILD-$RW_DEVICE
-RECOVERY_IMAGE="$OUT/$RW_OUT_NAME.img"
+RECOVERY_IMAGE="$OUT/recovery.img"
 FOX_VENDOR_PATH="$OUT/../../../../vendor/recovery"
 
 # 2GB version
@@ -81,6 +81,7 @@ expand_vendor_path() {
 
 # create zip file
 do_create_update_zip() {
+echo -e "${BLUE}-- Making update.zip${NC}"
 local WORK_DIR=""
 
   echo -e "${BLUE}-- Creating update.zip${NC}"
@@ -118,8 +119,7 @@ local WORK_DIR=""
   fi
   
   # patch updater-script to run only for the current device (change default to only mido)
-#  local F="$WORK_DIR/META-INF/com/google/android/updater-script"
-  local F="$WORK_DIR/META-INF/com/google/android/update-binary"
+  local F="$WORK_DIR/META-INF/com/google/android/updater-script"
   if [ "$RW_DEVICE" != "mido" ]; then
      sed -i -e "s/mido/$RW_DEVICE/g" $F     
   fi
@@ -249,7 +249,6 @@ fi
 # create update zip installer
 do_create_update_zip
 
-# report
 echo -e "${RED}--------------------Finished building OrangeFox---------------------${NC}"
 echo -e "${GREEN}Recovery image: $RECOVERY_IMAGE"
 echo -e "          MD5: $RECOVERY_IMAGE.md5${NC}"
@@ -257,3 +256,4 @@ echo -e ""
 echo -e "${GREEN}Recovery zip: $OUT/$RW_OUT_NAME.zip"
 echo -e "${RED}==================================================================${NC}"
 
+# end!
